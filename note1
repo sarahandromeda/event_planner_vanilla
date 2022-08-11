@@ -1,0 +1,38 @@
+Event Planner App
+
+Use CSV file to house event information
+
+CSV headers: event_name, event_type, host, location, start_datetime
+
+Necessary functions:
+	check_upcoming_events
+		read CSV and return any events happening in less than 36 hours
+		print events with countdown until start time
+		run automatically on startup
+		
+	+add_event
+		add event to the CSV file, prompt for information relevant to CSV file headers
+		
+	remove_event
+		prompt for event_name and event_time
+		find events matching, return event for confirmation of deletion
+		
+	see_all 
+		return all events upcomming and passed
+		
+	see_upcomming 
+		return all events not yet happened
+		
+	see_past
+		return all past events
+		
+	host_events(host)
+		takes host argument, returns all events with matching host
+		
+
+Needs:
+	A message module housing relevant messages
+	to be displayed on the console
+
+	
+	
