@@ -3,6 +3,15 @@ from input_validation import InputVerification as validate
 from messages import Say
 
 # Input Request Methods
+class Menu:
+    def get_selection():
+        """
+        Prompts user for an input related to menu options.
+        Acccepts user input of number 1-8.
+        Return selection as a string. 
+        """
+        response = validate().verify_menu_selection(input())
+        return response
 
 class NewEvent:
     """
@@ -11,7 +20,6 @@ class NewEvent:
     Returns new_event dict representing the fields as keys and
     inputs as the values.
     """
-    @classmethod
     def new_event():
         """
         Requests input from users relevant to a new event for each 
@@ -23,26 +31,25 @@ class NewEvent:
         new_event = {}
 
         Say.askfor_event_name()
-        new_event['event_name'] = validate.verify(input())
+        new_event['event_name'] = validate().verify(input())
 
         Say.askfor_event_type()
-        new_event['event_type'] = validate.verify(input())
+        new_event['event_type'] = validate().verify(input())
 
         Say.askfor_organizer()
-        new_event['organizer'] = validate.verify(input())
+        new_event['organizer'] = validate().verify(input())
 
         Say.askfor_location()
-        new_event['location'] = validate.verify(input())
+        new_event['location'] = validate().verify(input())
 
         Say.askfor_date()
-        start_date = validate.verify_date(input())
+        start_date = validate().verify_date(input())
 
         Say.askfor_time()
-        start_time = validate.verify_time(input())
+        start_time = validate().verify_time(input())
 
         time = start_date + ' ' + start_time
         new_event['start_datetime'] = datetime.strptime(time, "%m/%d/%y %I:%M %p")
-
         return new_event
 
 class QueryInput:
@@ -63,8 +70,8 @@ class QueryInput:
         """
         
         Say.search_options()
-        response = validate.verify(input())
-        self.query_list = list(response)
+        response = validate().verify(input())
+        self.query_list = [i for i in response if not i == ' ']
 
     def _get_query_params(self):
         """
@@ -77,23 +84,23 @@ class QueryInput:
         for option in self.query_list:
             if option == '1':
                 Say.askfor_organizer()
-                response = validate.verify(input())
+                response = validate().verify(input())
                 self.query_params.append(response)
             elif option == '2':
                 Say.askfor_location()
-                response = validate.verify(input())
+                response = validate().verify(input())
                 self.query_params.append(response)
             elif option == '3':
                 Say.askfor_event_type()
-                response = validate.verify(input())
+                response = validate().verify(input())
                 self.query_params.append(response)
             elif option == '4':
                 Say.askfor_date()
-                response = validate.verify_date(input())
+                response = validate().verify_date(input())
                 self.query_params.append(response)
             elif option == '5':
                 Say.askfor_time()
-                response = validate.verify_time(input())
+                response = validate().verify_time(input())
                 self.query_params.append(response)
 
     def generate_query_dict(self):
@@ -108,6 +115,20 @@ class QueryInput:
 
         return query_dict
 
-
-
-    
+class DeleteEvent:
+    def confirm_delete(data_dict):
+        Say.confirm_deletion(data_dict)
+        response = input()
+        if not response or response.lower() == 'n':
+            confirmed = []
+            return confirmed
+        confirmed = []
+        response = [i for i in response if not i == ' ']
+        for number in response:
+            try:
+                del data_dict[number]
+                Say.confirm_deleted(number)
+            except IndexError:
+                Say.invalid_input(number)
+        
+            

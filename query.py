@@ -9,8 +9,8 @@ class QueryEvent:
     """
     def __init__(self, event_list):
         self.event_list = event_list
-        self.query = QueryInput.generate_query_dict()
-        self.matching_events = event_list
+        self.query = QueryInput().generate_query_dict()
+        self.matching_events = []
 
     def query_events(self):
         """
@@ -44,8 +44,10 @@ class QueryEvent:
         for event in self.event_list:
             # event is a dictionary representing the event
             organizer = event['organizer'].lower()
+            print(param)
+            print(organizer)
             if param.lower() not in organizer:
-                for i in range(len(self.matching_events)):
+                for i in range(len(self.event_list)):
                     if self.matching_events[i] == event:
                         del self.matching_events[i]
 
@@ -57,10 +59,9 @@ class QueryEvent:
         for event in self.event_list:
             # event is a dictionary representing the event
             location = event['location'].lower()
-            if param.lower() not in location:
-                for i in range(len(self.matching_events)):
-                    if self.matching_events[i] == event:
-                        del self.matching_events[i]
+            print(event)
+            if param.lower() in location:
+                self.matching_events.append(event)
 
 
     def _by_type(self, param):
@@ -71,7 +72,7 @@ class QueryEvent:
             # event is a dictionary representing the event
             event_type = event['event_type'].lower()
             if param.lower() not in event_type:
-                for i in range(len(self.matching_events)):
+                for i in range(len(self.event_list)-1):
                     if self.matching_events[i] == event:
                         del self.matching_events[i]
 
@@ -86,7 +87,7 @@ class QueryEvent:
             start_datetime = event['start_datetime'] # a datetime object
             param_datetime = datetime.strptime(param, "%m/%d/%y")
             if not start_datetime.date() == param_datetime.date():
-                for i in range(len(self.matching_events)):
+                for i in range(len(self.event_list)-1):
                     if self.matching_events[i] == event:
                         del self.matching_events[i]
 
@@ -97,12 +98,12 @@ class QueryEvent:
         searches only the time of the datetime object representing 
         the start_datetime field.
         """
-        for i in range(len(self.event_list)):
+        for i in range(len(self.event_list) - 1):
             # event is a dictionary representing the event
             event = self.event_list[i]
             start_datetime = event['start_datetime'] # a datetime object
             param_datetime = datetime.strptime(param, "%I:%M %p")
             if not start_datetime.time() == param_datetime.time():
-                for i in range(len(self.matching_events)):
+                for i in range(len(self.matching_events) - 1):
                     if self.matching_events[i] == event:
                         del self.matching_events[i]
